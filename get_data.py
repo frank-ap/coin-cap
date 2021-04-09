@@ -5,9 +5,7 @@ import datetime
 from requests import Request, Session
 import json
 import plotly.express as px
-import psycopg2
 import numpy as np
-import psycopg2.extras as extras
 from io import StringIO
 import mysql.connector
 
