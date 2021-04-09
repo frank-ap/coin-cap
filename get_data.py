@@ -1,12 +1,7 @@
 import os
 from dotenv import load_dotenv
 import pandas as pd
-import datetime
-from requests import Request, Session
 import json
-import plotly.express as px
-import numpy as np
-from io import StringIO
 import mysql.connector
 
 load_dotenv()
