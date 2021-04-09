@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 import pandas as pd
+from requests import Request, Session
 import json
 import mysql.connector
 
