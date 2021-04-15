@@ -4,6 +4,7 @@ import pandas as pd
 from requests import Request, Session
 import json
 import mysql.connector
+import numpy as np
 
 load_dotenv()
 
@@ -22,10 +23,11 @@ results = request.json()
 
 jsonDict = json.dumps(results, sort_keys=True, indent=4)
 data = json.loads(jsonDict)
+#print(data)
 df = pd.DataFrame()
 
-dict = {"name":[], 
-        "percent_change_24h":[], 
+dict = {"name":[],
+        "percent_change_24h":[],
         "percent_change_7d":[],
         "percent_change_30d":[],
         "percent_change_90d":[],
@@ -48,9 +50,11 @@ for i in range(100):
     dict["percent_change_90d"].append(percent_90d)
     dict["price"].append(price)
     dict["date"].append(last_updated)
-    
+
 df = pd.DataFrame.from_dict(dict)
 df['date'] = pd.to_datetime(df['date']).dt.date
+
+print(df.head())
 
 mydb = mysql.connector.connect(
   host=os.getenv('mysql_host'),
@@ -61,15 +65,10 @@ mydb = mysql.connector.connect(
 )
 mycursor = mydb.cursor()
 
-sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
-val = [
-  ('Peter', 'Lowstreet 4'),
-  ('Amy', 'Apple st 652'),
-  ('Hannah', 'Mountain 21'),
-  ('Michael', 'Valley 345')
-]
+sql = "INSERT INTO listings (name, percent_change_24h, percent_change_7d, percent_change_30d, percent_change_90d, price, date) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+tuples = [tuple(x) for x in df.to_numpy()]
 
-mycursor.executemany(sql, val)
+mycursor.executemany(sql, tuples)
 
 mydb.commit()
 
