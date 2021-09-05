@@ -17,9 +17,9 @@
 </head>
 <body>
     <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
           <div class="container">
-            <a class="navbar-brand mr-4" href="/">Flask Coincap</a>
+            <a class="navbar-brand ml-auto" href="/">Flask Coincap</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -31,17 +31,18 @@
                 <a class="nav-item nav-link" href="{{ url_for('last_day') }}">Last Day</a>
               </div>
               <!-- Navbar Right Side -->
-              <div class="navbar-nav">
+              <div class="navbar-nav navbar-right">
                   {% if current_user.is_authenticated %}
+                    <a class="nav-item nav-link" href="{{ url_for('alerts') }}">Alerts</a>
                     <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
                     <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
                   {% else %}
                     <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
                     <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
                   {% endif %}
+                </div>
               </div>
             </div>
-          </div>
         </nav>
     </header>
     <main role="main" class="container">
