@@ -78,5 +78,4 @@ def create_plot(df, group, y_axis):
     graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
     return graphJSON
-
 from coincap import routes

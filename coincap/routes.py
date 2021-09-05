@@ -2,18 +2,17 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 from flask import render_template, flash, redirect, url_for, request
-from coincap.forms import RegistrationForm, LoginForm
+from coincap.forms import RegistrationForm, LoginForm, AlertsForm
 from coincap import app, create_plot, conn, bcrypt, db
 from datetime import datetime
-from coincap.models import User, Listings
+from coincap.models import User, Listings, Alerts
 from flask_login import login_user, current_user, logout_user, login_required
 
 load_dotenv()
 
 @app.route('/')
 def home():
-
-    return render_template('home.html')
+    return render_template('home.html', title='Home')
 
 @app.route('/last_ninety')
 def last_ninety():
@@ -85,4 +84,21 @@ def logout():
 @login_required
 def account():
     return render_template('account.html', title='Account')
+
+@app.route("/alerts", methods=['GET','POST'])
+@login_required
+def alerts():
+    print(current_user.id)
+    print([(listings.name, listings.name) for listings in Listings.query.with_entities(Listings.id, Listings.name).order_by(Listings.date.desc(), Listings.name.asc()).limit(100).all()])
+    form = AlertsForm()
+    form.crypto1.choices = [(listings.name, listings.name) for listings in Listings.query.with_entities(Listings.id, Listings.name).order_by(Listings.date.desc(), Listings.name.asc()).limit(100).all()]
+    form.crypto2.choices = [(listings.name, listings.name) for listings in Listings.query.with_entities(Listings.id, Listings.name).order_by(Listings.date.desc(), Listings.name.asc()).limit(100).all()]
+    form.crypto3.choices = [(listings.name, listings.name) for listings in Listings.query.with_entities(Listings.id, Listings.name).order_by(Listings.date.desc(), Listings.name.asc()).limit(100).all()]
+    if form.validate_on_submit():
+        alerts = Alerts(crypto1=form.crypto1.data, crypto2=form.crypto2.data, crypto3=form.crypto3.data, user_id=current_user.id)
+        db.session.add(alerts)
+        db.session.commit()
+        flash(f'We will alert you when the price of {form.crypto1.data}, {form.crypto2.data} or {form.crypto3.data} drops!', 'success')
+        return redirect(url_for('home'))
+    return render_template('alerts.html', title='Alerts', form=form)
 

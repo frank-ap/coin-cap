@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from coincap.models import User
 
@@ -25,3 +25,10 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+class AlertsForm(FlaskForm):
+    crypto1 = SelectField('Currency1', choices=[], validators=[DataRequired()])
+    crypto2 = SelectField('Currency2', choices=[], validators=[DataRequired()])
+    crypto3 = SelectField('Currency3', choices=[], validators=[DataRequired()])
+    #alerted = SelectField('Alerted every', choices=['Day', 'Week', 'Month'], validators=[DataRequired()])
+    submit = SubmitField('Submit')
